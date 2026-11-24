@@ -102,7 +102,7 @@ export function buildHtml(carousel, brand = loadBrand()) {
       if (s.headline) parts.push(`<div class="h">${rich(s.headline).replace(/\n/g, '<br>')}</div>`);
       if (s.body) parts.push(`<div class="b">${paragraphs(s.body)}</div>`);
       if (keyword) parts.push(`<div class="key">${ascii(esc(keyword))}</div>`);
-      return `<section class="slide ${theme} ${s.type}" id="s${i + 1}">${who}<div class="c"><div class="in">${parts.join('')}</div></div></section>`;
+      return `<section class="slide ${theme} ${s.type}" id="s${i + 1}"><div class="c"><div class="in">${who}${parts.join('')}</div></div></section>`;
     })
     .join('\n');
   return `<!DOCTYPE html>
