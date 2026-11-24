@@ -1,0 +1,62 @@
+/* One 1080 x 1350 slide (Instagram's 4:5). Three themes, one accent color.
+   --k is the fit scale: the script in the page lowers it until the words fit. */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #2a2927; }
+body { padding: 24px; font-size: 0; }
+
+.slide {
+  --k: 1; --hs: 76px; --bs: 50px;
+  width: 1080px; height: 1350px; position: relative; overflow: hidden;
+  display: inline-flex; flex-direction: column; vertical-align: top;
+  padding: 84px 92px 96px;
+  background: var(--bg); color: var(--fg); font-family: var(--body-font);
+  zoom: .3; margin: 0 40px 40px 0;
+}
+
+.night { --bg: #0b0b0c; --fg: #f5f1e8; --soft: #d8d3c8; --muted: #9a958b; --em: var(--accent);
+  --pill: var(--accent); --on-pill: var(--on-accent);
+  --head-font: "CM Display", "Arial Black", sans-serif; --head-weight: 800; --head-track: -1.5px;
+  --body-font: "CM Text", Helvetica, Arial, sans-serif; }
+.paper { --bg: #f2ece0; --fg: #1b1a17; --soft: #3d3a33; --muted: #6e675b; --em: var(--accent);
+  --pill: var(--accent); --on-pill: var(--on-accent);
+  --head-font: "CM Serif", Georgia, serif; --head-weight: 700; --head-track: -1.5px;
+  --body-font: "CM Serif", Georgia, serif; --bs: 56px; }
+.paper .slide, .slide.paper { --hs: 82px; }
+.color { --bg: var(--accent); --fg: var(--on-accent); --soft: var(--on-accent); --muted: var(--on-accent); --em: var(--on-accent);
+  --pill: var(--on-accent); --on-pill: var(--accent);
+  --head-font: "CM Display", "Arial Black", sans-serif; --head-weight: 800; --head-track: -1.5px;
+  --body-font: "CM Text", Helvetica, Arial, sans-serif; }
+.color .b b { text-decoration: underline; text-decoration-thickness: 5px; text-underline-offset: 8px; }
+.color .hd { opacity: .75; }
+
+.who { flex: none; height: 84px; display: flex; align-items: center; gap: 22px; }
+.ph { flex: none; width: 84px; height: 84px; border-radius: 50%; object-fit: cover;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--pill); color: var(--on-pill); font: 800 40px/1 var(--head-font); }
+.nm { font: 700 32px/1.2 var(--body-font); color: var(--fg); }
+.hd { font: 400 28px/1.25 var(--body-font); color: var(--muted); }
+
+.c { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+.in { display: flex; flex-direction: column; align-items: flex-start; gap: calc(var(--k) * 40px); }
+.h { font-family: var(--head-font); font-weight: var(--head-weight); letter-spacing: var(--head-track);
+  font-size: calc(var(--k) * var(--hs)); line-height: 1.08; color: var(--fg); text-wrap: balance; overflow-wrap: anywhere; }
+.b { font-size: calc(var(--k) * var(--bs)); line-height: 1.36; color: var(--soft); overflow-wrap: anywhere; text-wrap: pretty; }
+.b p + p { margin-top: .7em; }
+.h b { color: var(--em); font-weight: inherit; }
+.b b { color: var(--em); font-weight: 700; }
+
+.hook { --hs: 104px; }
+.statement { --hs: 96px; }
+.cta { --hs: 86px; }
+.paper.hook { --hs: 112px; } .paper.statement { --hs: 104px; } .paper.cta { --hs: 92px; }
+.num { font: 800 calc(var(--k) * 150px)/.9 var(--head-font); color: var(--em); letter-spacing: -4px; }
+.color .num { opacity: .55; }
+.key { background: var(--pill); color: var(--on-pill); border-radius: 999px;
+  font: 800 calc(var(--k) * 52px)/1 "CM Display", "Arial Black", sans-serif; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: calc(var(--k) * 28px) calc(var(--k) * 48px); margin-top: calc(var(--k) * 12px); }
+
+/* One slide, full size: what the screenshot takes and what the page previews. */
+.one, .one body { background: transparent; }
+.one body { padding: 0; overflow: hidden; }
+.one .slide { zoom: 1; margin: 0; display: none; }
+.one .slide.on { display: flex; }

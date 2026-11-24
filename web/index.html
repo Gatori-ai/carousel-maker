@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carousel Maker</title>
+<link rel="icon" href="/assets/gatori-enso.png">
+<link rel="stylesheet" href="/ink.css">
+<style>
+  main, footer { max-width: 940px; }
+  .new { display: grid; grid-template-columns: minmax(0, 1fr) 210px auto; gap: 8px; margin-bottom: 22px; }
+  .list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; margin-bottom: 26px; }
+  .list button { text-align: left; display: flex; gap: 12px; align-items: baseline; background: var(--paper); }
+  .list button[aria-current=true] { border-color: var(--red); box-shadow: inset 3px 0 0 var(--red); }
+  .list .hook { flex: 1; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .list .when { font-size: 15px; color: var(--muted); white-space: nowrap; }
+  .slide-row { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 22px; align-items: start; }
+  .frame { width: 270px; height: 338px; overflow: hidden; border-radius: 3px; border: 1px solid var(--line-strong); background: #0b0b0c; }
+  .frame iframe { width: 1080px; height: 1350px; border: 0; transform: scale(.25); transform-origin: 0 0; pointer-events: none; }
+  .fields label { margin-top: 10px; }
+  .fields label:first-child { margin-top: 0; }
+  .fields textarea { min-height: 64px; }
+  .fields textarea.long { min-height: 120px; }
+  .head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 4px; }
+  .head b { color: var(--ink); font-weight: 500; font-size: 20px; margin-right: auto; }
+  .head button, .small { padding: 4px 10px; font-size: 15px; }
+  .head select { width: auto; padding: 4px 8px; font-size: 16px; }
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 14px; }
+  .findings { margin: 0; padding: 0 0 0 20px; font-size: 17px; color: var(--ink); }
+  .findings li::marker { color: var(--red); }
+  .ok { color: var(--muted); font-style: italic; }
+  input[type=color] { width: 64px; height: 44px; padding: 2px; border: 1px solid var(--line-strong); border-radius: 3px; background: var(--paper); }
+  .path { font: 14px/1.5 var(--mono); word-break: break-all; }
+  @media (max-width: 720px) { .new, .slide-row, .two { grid-template-columns: minmax(0, 1fr); } .frame { margin: 0 auto; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <img class="mark" src="/assets/gatori-enso.png" alt="">
+    <a class="name" href="/">Carousel Maker<i>.</i></a>
+  </div>
+
+  <div class="status" id="status" hidden></div>
+
+  <section class="card" id="setup" hidden>
+    <h2 id="setup-title">Set up your brand</h2>
+    <p class="hint">Saved in your studio folder on this computer. Every carousel is written and drawn from it.</p>
+    <div class="two">
+      <div><label for="b-name">Your name</label><input type="text" id="b-name" maxlength="80"></div>
+      <div><label for="b-handle">Instagram handle</label><input type="text" id="b-handle" maxlength="41" placeholder="@yourhandle"></div>
+      <div><label for="b-theme">Look</label><select id="b-theme"></select></div>
+      <div><label for="b-accent">Accent color</label><input type="color" id="b-accent"></div>
+      <div><label for="b-keyword">Comment keyword (optional)</label><input type="text" id="b-keyword" maxlength="40" placeholder="GUIDE"></div>
+      <div><label for="b-promise">What you send when someone comments it</label><input type="text" id="b-promise" maxlength="200"></div>
+    </div>
+    <label for="b-context">Who you are, who reads you, what you post about, what you offer</label>
+    <textarea id="b-context" class="mono" style="min-height:260px"></textarea>
+    <div class="row"><button class="primary" id="b-save">Save</button><button id="b-close" hidden>Close</button></div>
+  </section>
+
+  <section id="work" hidden>
+    <div class="new">
+      <input type="text" id="topic" maxlength="300" placeholder="The idea for the next carousel" aria-label="The idea for the next carousel">
+      <select id="arc" aria-label="Arc"></select>
+      <button class="primary" id="make">New carousel</button>
+    </div>
+    <p class="hint" id="idea-hint" hidden></p>
+
+    <div class="list" id="list"></div>
+
+    <div id="editor" hidden>
+      <div class="card">
+        <div class="meta" id="c-meta"></div>
+        <ul class="findings" id="findings"></ul>
+        <p class="ok" id="no-findings" hidden>No findings. Read it once aloud before you post.</p>
+        <div class="row">
+          <button class="primary" id="save">Save and check</button>
+          <button id="render">Make the images</button>
+          <button id="approve">Mark as approved</button>
+        </div>
+        <p class="hint" id="where" hidden></p>
+      </div>
+
+      <div id="slides"></div>
+      <div class="row" style="margin:0 0 20px"><button id="add">Add a slide</button></div>
+
+      <div class="card">
+        <h2>Caption</h2>
+        <textarea id="caption" class="piece" style="min-height:220px" aria-label="Caption"></textarea>
+        <label for="hashtags">Hashtags, separated by spaces</label>
+        <input type="text" id="hashtags">
+        <div class="row"><button id="copy">Copy caption</button></div>
+      </div>
+
+      <div class="card">
+        <h2>Rewrite it</h2>
+        <label for="note">Say what to change</label>
+        <textarea id="note" style="min-height:90px"></textarea>
+        <div class="checks" style="margin-top:10px"><label><input type="checkbox" id="remember"> Remember this for every carousel</label></div>
+        <div class="row"><button id="revise">Rewrite</button></div>
+      </div>
+    </div>
+
+    <details>
+      <summary>Brand and context</summary>
+      <div class="row"><button id="open-setup">Change brand and context</button></div>
+      <pre id="notes"></pre>
+    </details>
+  </section>
+</main>
+<footer>
+  <img class="mark" src="/assets/gatori-enso.png" alt="">
+  <span>Brought to you by <a href="https://gatori.ai">Gatori.ai</a></span>
+</footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var state = null, current = null, stamp = 0;
+
+  function el(tag, props, kids) {
+    var n = document.createElement(tag);
+    Object.keys(props || {}).forEach(function (k) {
+      if (k === 'text') n.textContent = props[k];
+      else if (k === 'on') Object.keys(props.on).forEach(function (e) { n.addEventListener(e, props.on[e]); });
+      else if (k in n && k !== 'list') n[k] = props[k];
+      else n.setAttribute(k, props[k]);
+    });
+    (kids || []).forEach(function (c) { n.appendChild(c); });
+    return n;
+  }
+
+  function say(text, error) {
+    var s = $('status');
+    s.hidden = !text;
+    s.textContent = text || '';
+    s.className = 'status' + (error ? ' error' : '');
+  }
+
+  function api(path, body) {
+    return fetch(path, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : undefined)
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || 'Request failed.'); return j; }); });
+  }
+
+  function job(label, promise) {
+    say(label);
+    document.querySelectorAll('button').forEach(function (b) { b.disabled = true; });
+    return promise.then(function (v) { say(''); return v; }, function (e) { say(e.message, true); throw e; })
+      .finally(function () { document.querySelectorAll('button').forEach(function (b) { b.disabled = false; }); if (current) slides(); });
+  }
+
+  function load() {
+    return api('/api/state').then(function (s) {
+      state = s;
+      var b = s.brand;
+      $('b-name').value = b.name; $('b-handle').value = b.handle; $('b-accent').value = b.accent;
+      $('b-keyword').value = b.cta.keyword; $('b-promise').value = b.cta.promise; $('b-context').value = s.context;
+      fill($('b-theme'), s.themes.map(function (t) { return [t, t]; }), b.theme);
+      fill($('arc'), [['', 'Pick the arc for me']].concat(s.arcs.map(function (a) { return [a.id, a.name]; })), $('arc').value);
+      $('setup').hidden = s.status.setUp && !$('setup').dataset.open;
+      $('b-close').hidden = !s.status.setUp;
+      $('work').hidden = !s.status.setUp;
+      $('notes').textContent = s.notes;
+      var hint = $('idea-hint');
+      hint.hidden = !s.status.nextIdea;
+      hint.textContent = s.status.nextIdea ? 'Leave the idea empty to use the next line of ideas.md: ' + s.status.nextIdea : '';
+      list();
+    });
+  }
+
+  function fill(select, options, value) {
+    select.textContent = '';
+    options.forEach(function (o) { select.appendChild(el('option', { value: o[0], text: o[1] })); });
+    select.value = value || options[0][0];
+  }
+
+  function list() {
+    var box = $('list');
+    box.textContent = '';
+    state.carousels.forEach(function (c) {
+      box.appendChild(el('button', { 'aria-current': String(current && current.carousel.id === c.id), on: { click: function () { open(c.id); } } }, [
+        el('span', { className: 'hook', text: (c.hook || c.topic || c.id).replace(/\*\*/g, '') }),
+        el('span', { className: 'when', text: c.slides + ' slides, ' + c.status }),
+      ]));
+    });
+  }
+
+  function open(id) {
+    return api('/api/carousel?id=' + encodeURIComponent(id)).then(show);
+  }
+
+  function show(view) {
+    current = view;
+    stamp++;
+    var c = view.carousel;
+    $('editor').hidden = false;
+    $('c-meta').textContent = c.topic + (c.arc ? ' (' + c.arc + ')' : '') + ', ' + c.status;
+    $('caption').value = c.caption;
+    $('hashtags').value = c.hashtags.map(function (h) { return '#' + h; }).join(' ');
+    var f = $('findings');
+    f.textContent = '';
+    view.issues.forEach(function (i) {
+      var at = i.slide === null ? 'Whole carousel' : i.slide === 'caption' ? 'Caption' : 'Slide ' + i.slide;
+      f.appendChild(el('li', { text: at + ': ' + i.message }));
+    });
+    $('no-findings').hidden = view.issues.length > 0;
+    var w = $('where');
+    w.hidden = !view.images.length;
+    w.textContent = view.images.length ? view.images.length + ' images and caption.txt are in ' + view.dir : '';
+    w.className = 'hint path';
+    slides();
+    list();
+  }
+
+  function slides() {
+    var box = $('slides'), c = current.carousel;
+    box.textContent = '';
+    c.slides.forEach(function (s, i) {
+      var type = el('select', { 'aria-label': 'Slide type', on: { change: function () { s.type = type.value; slides(); } } });
+      fill(type, state.types.map(function (t) { return [t.id, t.id]; }), s.type);
+      var head = el('textarea', { value: s.headline, 'aria-label': 'Headline', on: { input: function () { s.headline = head.value; } } });
+      var body = el('textarea', { className: 'long', value: s.body, 'aria-label': 'Body', on: { input: function () { s.body = body.value; } } });
+      var fields = [
+        el('div', { className: 'head' }, [
+          el('b', { text: 'Slide ' + (i + 1) }), type,
+          el('button', { text: 'Up', disabled: i === 0, on: { click: function () { move(i, -1); } } }),
+          el('button', { text: 'Down', disabled: i === c.slides.length - 1, on: { click: function () { move(i, 1); } } }),
+          el('button', { text: 'Remove', on: { click: function () { c.slides.splice(i, 1); slides(); } } }),
+        ]),
+        el('label', { text: 'Headline' }), head,
+        el('label', { text: 'Body. Put **two asterisks** around the key phrase.' }), body,
+      ];
+      if (s.type === 'cta') {
+        var key = el('input', { type: 'text', value: s.keyword || '', maxLength: 40, placeholder: state.brand.cta.keyword || 'none', on: { input: function () { s.keyword = key.value; } } });
+        fields.push(el('label', { text: 'Keyword on the button (empty uses the one in your brand)' }), key);
+      }
+      var preview = [el('div', { className: 'frame' }, [el('iframe', { src: '/slides?id=' + encodeURIComponent(c.id) + '&slide=' + (i + 1) + '&v=' + stamp, title: 'Slide ' + (i + 1), loading: 'lazy' })])];
+      if (current.images[i]) preview.push(el('p', { className: 'hint' }, [el('a', { href: '/image?id=' + encodeURIComponent(c.id) + '&n=' + (i + 1), text: 'Download image' })]));
+      box.appendChild(el('div', { className: 'card slide-row' }, [el('div', {}, preview), el('div', { className: 'fields' }, fields)]));
+    });
+  }
+
+  function move(i, d) {
+    var s = current.carousel.slides, t = s[i];
+    s[i] = s[i + d]; s[i + d] = t;
+    slides();
+  }
+
+  function edited() {
+    var c = current.carousel;
+    c.caption = $('caption').value;
+    c.hashtags = $('hashtags').value.split(/[\s,]+/).filter(Boolean);
+    return c;
+  }
+
+  function save() {
+    return api('/api/save', { id: current.carousel.id, carousel: edited() });
+  }
+
+  $('b-save').addEventListener('click', function () {
+    if (!$('b-name').value.trim()) return say('Add your name.', true);
+    delete $('setup').dataset.open;
+    job('Saving', api('/api/setup', {
+      name: $('b-name').value, handle: $('b-handle').value, theme: $('b-theme').value, accent: $('b-accent').value,
+      keyword: $('b-keyword').value, promise: $('b-promise').value, context: $('b-context').value,
+    }).then(load).then(function () { if (current) return open(current.carousel.id); }));
+  });
+  $('b-close').addEventListener('click', function () { delete $('setup').dataset.open; $('setup').hidden = true; });
+  $('open-setup').addEventListener('click', function () { $('setup').dataset.open = '1'; $('setup').hidden = false; $('setup').scrollIntoView(); });
+  $('make').addEventListener('click', function () {
+    job('Writing the carousel. This takes a minute or two.', api('/api/new', { topic: $('topic').value, arc: $('arc').value }).then(function (r) {
+      $('topic').value = '';
+      return load().then(function () { return open(r.carousel.id); });
+    }));
+  });
+  $('save').addEventListener('click', function () { job('Saving', save().then(show).then(load)); });
+  $('render').addEventListener('click', function () {
+    job('Making the images', save().then(function () { return api('/api/render', { id: current.carousel.id }); }).then(show).then(load));
+  });
+  $('approve').addEventListener('click', function () {
+    job('Saving', save().then(function () { return api('/api/approve', { id: current.carousel.id }); }).then(show).then(load));
+  });
+  $('add').addEventListener('click', function () {
+    var s = current.carousel.slides, at = s.length && s[s.length - 1].type === 'cta' ? s.length - 1 : s.length;
+    s.splice(at, 0, { type: 'body', headline: '', body: '' });
+    slides();
+  });
+  $('copy').addEventListener('click', function () {
+    var c = edited(), tags = c.hashtags.map(function (h) { return '#' + h.replace(/^#+/, ''); }).join(' ');
+    navigator.clipboard.writeText(c.caption + (tags ? '\n\n' + tags : '')).then(function () { say('Caption copied.'); setTimeout(function () { say(''); }, 1600); });
+  });
+  $('revise').addEventListener('click', function () {
+    if (!$('note').value.trim()) return say('Say what to change.', true);
+    job('Rewriting from your note. This takes a minute or two.', save().then(function () {
+      return api('/api/revise', { id: current.carousel.id, note: $('note').value, remember: $('remember').checked });
+    }).then(function (r) {
+      $('note').value = ''; $('remember').checked = false;
+      return load().then(function () { return open(r.carousel.id); });
+    }));
+  });
+
+  load().then(function () { if (state.carousels[0]) return open(state.carousels[0].id); }).catch(function (e) { say(e.message, true); });
+})();
+</script>
+</body>
+</html>

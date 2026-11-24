@@ -1,0 +1,17 @@
+{
+  "name": "carousel-maker",
+  "version": "0.1.0",
+  "license": "MIT",
+  "private": true,
+  "description": "Turns one idea into an Instagram carousel: the arc, the slide copy, the images and the caption.",
+  "type": "module",
+  "bin": { "carousel": "bin/carousel.mjs" },
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node bin/carousel.mjs serve",
+    "test": "node --test test/*.test.mjs"
+  },
+  "optionalDependencies": {
+    "@anthropic-ai/sdk": "1.3.0"
+  }
+}

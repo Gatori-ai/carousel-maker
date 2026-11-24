@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+*.tmp-*
+
+# Your brand, your context and your carousels. A fork of a public repository is public.
+/studio/

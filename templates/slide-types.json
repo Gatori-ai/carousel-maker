@@ -1,0 +1,9 @@
+[
+  { "id": "hook", "purpose": "Stop the scroll. Name something specific the reader already feels.", "maxWords": 22 },
+  { "id": "context", "purpose": "Set up why this matters.", "maxWords": 50 },
+  { "id": "body", "purpose": "Deliver one idea with support.", "maxWords": 55 },
+  { "id": "statement", "purpose": "Land a single line.", "maxWords": 22 },
+  { "id": "step", "purpose": "Teach one action. The headline names the step.", "maxWords": 55 },
+  { "id": "proof", "purpose": "Show evidence: a number, an example, a story beat.", "maxWords": 55 },
+  { "id": "cta", "purpose": "Ask for one action.", "maxWords": 40 }
+]

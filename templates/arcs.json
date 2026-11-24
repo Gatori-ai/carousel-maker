@@ -1,0 +1,10 @@
+[
+  { "id": "problem-solution", "name": "Problem to solution", "slides": "5 to 7",
+    "flow": ["hook: name the pain or the tension", "context: what it costs if nothing changes", "statement: the shift in how to see it", "step or body, one to three slides: what to do", "cta: the next step"] },
+  { "id": "step-by-step", "name": "Step by step", "slides": "7 to 10",
+    "flow": ["hook: the outcome the reader gets", "context: why this matters now", "step, three to six slides: one step per slide, each building on the last", "cta: the next step"] },
+  { "id": "belief-shift", "name": "Belief shift", "slides": "5 to 7",
+    "flow": ["hook: the common belief", "context: what that belief costs, with a specific", "statement: the principle that holds up", "proof: a personal example or a specific detail", "body: what changes in practice", "cta: the next step"] },
+  { "id": "story-lesson", "name": "Story to lesson", "slides": "6 to 8",
+    "flow": ["hook: open in the middle of the story", "body, two or three slides: the story, one beat per slide", "statement: the turn, what changed", "body: the principle and what it means for the reader", "cta: the next step"] }
+]

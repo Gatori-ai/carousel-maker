@@ -1,0 +1,19 @@
+{
+  "punctuation": [
+    { "id": "em dash", "pattern": "—", "fix": "Use a period, a comma, a colon or parentheses." },
+    { "id": "!", "pattern": "!", "fix": "Remove the exclamation mark." },
+    { "id": "...", "pattern": "\\.\\.\\.|…", "fix": "Remove the ellipsis." }
+  ],
+  "words": [
+    "delve", "tapestry", "landscape", "realm", "crucial", "pivotal", "nuanced", "multifaceted",
+    "intricate", "paradigm", "leverage", "robust", "comprehensive", "seamless", "frictionless",
+    "foster", "facilitate", "underscore", "encompass", "embark", "unlock", "unleash",
+    "game-changing", "game-changer", "fast-paced", "revolutionary", "transform", "empower", "elevate", "supercharge", "resonate",
+    "moreover", "furthermore", "indeed", "notably"
+  ],
+  "phrases": [
+    "at its core", "in essence", "the heart of", "it's worth noting", "it's important to note",
+    "in conclusion", "in today's world", "that said", "here's what i learned", "here's the thing",
+    "let's dive in"
+  ]
+}
