@@ -217,7 +217,7 @@ export async function render(id, { brand = loadBrand() } = {}) {
       }
       files.push(file);
     }
-    write(path.join(dir, 'fit.json'), JSON.stringify(fit) + '\n');
+    write(path.join(dir, '.fit.json'), JSON.stringify(fit) + '\n');
     return { dir, files, fit };
   } finally {
     fs.rmSync(profile, { recursive: true, force: true });
@@ -226,7 +226,7 @@ export async function render(id, { brand = loadBrand() } = {}) {
 
 export function lastFit(id) {
   try {
-    return JSON.parse(read(path.join(p.dir(id), 'fit.json')) || '[]');
+    return JSON.parse(read(path.join(p.dir(id), '.fit.json')) || '[]');
   } catch {
     return [];
   }
